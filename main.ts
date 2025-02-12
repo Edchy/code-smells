@@ -9,17 +9,19 @@
 // 1. Onödig variabel och onödig return av variabel. reduce ger tillbaks en ny array så det går att returnera direkt.
 // andra argumentet till reduce är initiala värdet för "ackumulator variabeln". Sätts till 0 här men behövs egentligen inte då elementet på index 0 används om man inte anger ett andra argument.
 
-// function getLength(jumpings: number[]): number {
-//   let totalNumber = 0;
-
-//   totalNumber = jumpings.reduce(
-//     (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
-//   );
-
-//   return totalNumber;
-// }
-
+// smelly
 function getLength(jumpings: number[]): number {
+  let totalNumber = 0;
+
+  totalNumber = jumpings.reduce(
+    (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
+  );
+
+  return totalNumber;
+}
+
+// bättre
+function getLength2(jumpings: number[]): number {
   return jumpings.reduce(
     (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump,
     0
@@ -30,6 +32,9 @@ function getLength(jumpings: number[]): number {
     2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
     */
 
+// 2.Ok, så det första jag tänker här är ju att man måste heta Sebastian för att bli godkänd :). Och att detta inte är någon "pure function" då den tar in ett objekt och ändrar det. Men detta har ju inte direkt med refaktorering att göra. Fast kanske det har ändå pga namnet getStudentStatus - detta indikerar ju att funktionen är en "get-funktion", men det blir här även en "set-funktion". Så den failar på ett sätt "Single-resp" i "SOLID"
+//  Andra jag tänker är att ternary är nice, men nestlade ternaries inte är nice. Blir såklart mer kompakt men svårt att läsa.
+
 class Student {
   constructor(
     public name: string,
@@ -38,6 +43,7 @@ class Student {
   ) {}
 }
 
+// smelly
 function getStudentStatus(student: Student): string {
   student.passed =
     student.name == "Sebastian"
@@ -51,6 +57,11 @@ function getStudentStatus(student: Student): string {
   } else {
     return "IG";
   }
+}
+
+//bättre (dock inte samma som första om man även vill modifiera student.passed)
+function getStudentStatus2(student: Student): string {
+  return student.name === "Sebastian" && student.handedInOnTime ? "VG" : "IG";
 }
 
 /*
