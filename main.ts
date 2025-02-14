@@ -198,50 +198,61 @@ function createProductHTML(product: Product): HTMLElement {
   `;
   return container;
 }
+// 5. Ok, här är det inte DRY som gäller. Försöker ta bort all upprepning här och även flytta ut referenser till listorna utanför loopen för att inte behöva göra den queryn i varje iterering.
 
-/*
-    5. Följande funktion kommer presentera studenter. Men det finns ett antal saker som 
-    går att göra betydligt bättre. Gör om så många som du kan hitta!
-    */
-function presentStudents(students: Student[]) {
+//smelly
+// function presentStudents(students: Student[]) {
+//   for (const student of students) {
+//     if (student.handedInOnTime) {
+//       let container = document.createElement("div");
+//       let checkbox = document.createElement("input");
+//       checkbox.type = "checkbox";
+//       checkbox.checked = true;
+
+//       container.appendChild(checkbox);
+//       let listOfStudents = document.querySelector("ul#passedstudents");
+//       listOfStudents?.appendChild(container);
+//     } else {
+//       let container = document.createElement("div");
+//       let checkbox = document.createElement("input");
+//       checkbox.type = "checkbox";
+//       checkbox.checked = false;
+
+//       container.appendChild(checkbox);
+//       let listOfStudents = document.querySelector("ul#failedstudents");
+//       listOfStudents?.appendChild(container);
+//     }
+//   }
+// }
+
+// bättre (går ju att bryta upp i två funktioner också som fråga 4
+function presentStudents(students: Student[]): void {
+  const listOfPassedStudents = document.querySelector("ul#passedstudents");
+  const listOfFailedStudents = document.querySelector("ul#failedstudents");
+
   for (const student of students) {
-    if (student.handedInOnTime) {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = true;
+    const container = document.createElement("div");
+    container.innerHTML = `
+    <input type="checkbox" ${student.handedInOnTime ? "checked" : ""} />
+    `;
 
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#passedstudents");
-      listOfStudents?.appendChild(container);
-    } else {
-      let container = document.createElement("div");
-      let checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = false;
-
-      container.appendChild(checkbox);
-      let listOfStudents = document.querySelector("ul#failedstudents");
-      listOfStudents?.appendChild(container);
-    }
+    student.handedInOnTime
+      ? listOfPassedStudents?.append(container)
+      : listOfFailedStudents?.append(container);
   }
 }
 
-/*
-    6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
-    Lorem, ipsum, dolor, sit, amet
-    Exemplet under löser problemet, men inte speciellt bra. Hur kan man göra istället?
-    */
-function concatenateStrings() {
-  let result = "";
-  result += "Lorem";
-  result += "ipsum";
-  result += "dolor";
-  result += "sit";
-  result += "amet";
-
-  return result;
+// 6. :)
+const strings = ["lorem", "ipsum", "dolor", "sit", "amet"];
+function concatenateStrings(array: string[]): string {
+  return array.join(" ");
 }
+console.log(concatenateStrings(strings));
+//
+function concatenateStrings2(...strings: string[]): string {
+  return strings.join(" ");
+}
+console.log(concatenateStrings2("lorem", "ipsum", "dolor", "sit", "amet"));
 
 /* 
   7. Denna funktion skall kontrollera att en användare är över 20 år och göra någonting.
