@@ -1,7 +1,3 @@
-// Jag kommer ge två svar på varje fråga: (1) där jag försöker komma på det utan att använda LLM - och (2) där jag använder LLM (om jag inte ser det själv), men försöker förstå svaret till 100%. Tror det är det bästa upplägger för att få ut det mesta av denna uppgift
-
-// Valde att spara den gamla koden och lägga till den nya direkt under (så att det blir lätt att se skillnaden). Fick därför sätta 2:or på allt. Blir ju dåliga namn!
-
 // 1. Onödig variabel och onödig return av variabel. reduce ger tillbaks en ny array så det går att returnera direkt.
 // andra argumentet till reduce är initiala värdet för "ackumulator variabeln". Sätts till 0 här men behövs egentligen inte då elementet på index 0 används om man inte anger ett andra argument.
 
@@ -111,7 +107,7 @@ function averageWeeklyTemperature(citytemps: CityTemp[], city: string) {
 console.log(averageWeeklyTemperature(cityTemperatures, "stockholm"));
 
 // Alternativ 2
-// Mer kompakt med kedjade funktioner. Men kanske mindre lättläsligt.
+// Mer kompakt med kedjade funktioner och reduce som ger tillbaks objekt så att jag kan spara summa och hur många värden som sparats så att jag vet hur mycket resultatet ska delas med. Men kanske mindre lättläsligt.
 function averageWeeklyTemperature2(citytemps: CityTemp[], city: string) {
   city = city.charAt(0).toUpperCase() + city.slice(1);
   const oneWeekAgo = Date.now() - 604800000;
@@ -260,23 +256,42 @@ console.log(concatenateStrings2("lorem", "ipsum", "dolor", "sit", "amet"));
       fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
       lösning som är hållbar och skalar bättre. 
   */
-function createUser(
-  name: string,
-  birthday: Date,
-  email: string,
-  password: string
-) {
-  // Validation
 
-  let ageDiff = Date.now() - birthday.getTime();
+// 7. Här är det första jag ser att det nog är bättre att skapa ett interface för en user istället för att mata in alla parametrar en och en. dels för att det kan bli, och redan är, alldeles för många parametrar. Hörde nånstans att två är max (om det går att undvika fler vilket det typ alltid borde gå på något sätt). Anledning två har med SOLID o ch "open/closed" att göra - vi slipper göra ändringar i funktionen om vi gör det i interface istället. Ändrade även logiken för !userage < 20 till att göra en tidig return istället, cleanare typ.
+
+// smelly
+// function createUser(
+//   name: string,
+//   birthday: Date,
+//   email: string,
+//   password: string
+// ) {
+//   let ageDiff = Date.now() - birthday.getTime();
+//   let ageDate = new Date(ageDiff);
+//   let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+//   console.log(userAge);
+
+//   if (!(userAge < 20)) {
+//   } else {
+//     return "Du är under 20 år";
+//   }
+// }
+interface User {
+  name: string;
+  birthday: Date;
+  email: string;
+  password: string;
+  avatar: string;
+  address: string;
+  pancakes: boolean;
+}
+function createUser(user: User) {
+  let ageDiff = Date.now() - user.birthday.getTime();
   let ageDate = new Date(ageDiff);
   let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
 
-  console.log(userAge);
+  if (userAge < 20) return "Du är under 20 år";
 
-  if (!(userAge < 20)) {
-    // Logik för att skapa en användare
-  } else {
-    return "Du är under 20 år";
-  }
+  // logik för skapa user
 }
